@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Como instalar e rodar o React
+É necessário ter instalado o **Node** no computador.
 
-## Getting Started
+Em seguida, abrir o terminal (CMD) na pasta onde vai ficar o projeto e digitar o comando ```npx create-next-app```.
+*Nota: estamos usando o React junto do **NextJS***
+Escolher as seguintes opções na instalação:
+- No, Customize settings
+- Use TypeScript? Escolher opção **NO**
+- Use Tailwind CSS? Escolher opção **NO**
+- O restante das opções pode deixar o padrão
 
-First, run the development server:
+Depois de baixado, se quiser, faça a limpeza dos arquivos padrão que vem no projeto (arquivos de CSS, SVG, ico).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Por fim, para **iniciar** (rodar) um projeto em React, rodar no terminal o comando ```npm run dev```.
+*Nota: tenha certeza de rodar esse comando na pasta raiz do projeto*
+
+## Como criar um módulo/componente em React
+Sempre que for criar um módulo ou um componente use essa estrutura:
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+export default function Produtos() {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+```
