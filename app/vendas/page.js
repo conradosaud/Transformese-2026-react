@@ -11,6 +11,8 @@ function Vendas() {
     const [ pagamento, alteraPagamento ] = useState()
     const [ observacao, alteraObservacao ] = useState()
 
+    const [ editando, alteraEditando ] = useState(false)
+
     const [listaVendas, alteraListaVendas] = useState([])
     const [listaUsuarios, alteraListaUsuarios] = useState([])
     const [listaLivros, alteraListaLivros] = useState([])
@@ -61,6 +63,16 @@ function Vendas() {
 
     }
 
+    function editar(objeto){
+
+        alteraEditando(true)
+
+        alteraQuantidade(objeto.quantidade)
+        alteraPagamento(objeto.pagamento)
+        alteraObservacao(objeto.observacao)
+
+    }
+
     function formataData(data){
         let data_formatada = new Date(data)
         data_formatada = data_formatada.toLocaleDateString()
@@ -107,6 +119,8 @@ function Vendas() {
         const { error } = await supabase.from('vendas').insert(obj)
         console.log(error)
 
+        buscaTodos()
+
     }
 
 
@@ -133,7 +147,7 @@ function Vendas() {
             .from('vendas')
             .select('*, id_usuario(*), id_livro(*)')
             .gt('created_at', inputPesquisaData+" 00:00:00+00")
-            .lt('created_at', inputPesquisaData+" 23:5:00+00")
+            .lt('created_at', inputPesquisaData+" 23:59:00+00")
 
         alteraListaVendas(data)
     }
@@ -176,7 +190,6 @@ function Vendas() {
 
             <form onSubmit={salvar} >
                 <p>Selecione o usuário</p>
-                
                 <select onChange={ e => alteraUsuario(e.target.value) } >
                     <option>Selecione...</option>
                 {
@@ -199,16 +212,26 @@ function Vendas() {
 
                 <br/>
                 <p>Digite a quantidade</p>
-                <input onChange={ e => alteraQuantidade(e.target.value) } />
+                <input value={quantidade} onChange={ e => alteraQuantidade(e.target.value) } />
                 <br/>
                 <p>Forma de pagamento</p>
-                <input onChange={ e => alteraPagamento(e.target.value) } />
+                <input value={pagamento} onChange={ e => alteraPagamento(e.target.value) } />
                 <br/>
                 <p>Digite uma observação</p>
-                <input onChange={ e => alteraObservacao(e.target.value) } />
+                <input value={observacao} onChange={ e => alteraObservacao(e.target.value) } />
                 <br/>
                 <br/>
-                <button>Salvar</button>
+                
+                {
+                    editando == true ?
+                        <div>
+                            <button>Atualizar</button>
+                            <button>Cancelar</button>
+                        </div>
+                    :
+                        <button>Salvar</button>
+                }
+
             </form>
 
             <hr/>
@@ -248,7 +271,7 @@ function Vendas() {
                                         <td> { formataPagamento(item.pagamento) } </td>
                                         <td> { formataData(item.created_at) } às { formataHoras(item.created_at) } </td>
                                         <td> {item.observacao} </td>
-                                        <td> <button onClick={ ()=> location.href="/vendas/"+item.id } >Ver</button> <button onClick={ ()=> excluir(item.id) } >Excluir</button> </td>
+                                        <td> <button onClick={ ()=> location.href="/vendas/"+item.id } >Ver</button> <button onClick={ ()=> editar(item) } >Editar</button> <button onClick={ ()=> excluir(item.id) } >Excluir</button> </td>
                                     </tr>
                         )
                 }
