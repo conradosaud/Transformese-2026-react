@@ -11,7 +11,7 @@ function Vendas() {
     const [ pagamento, alteraPagamento ] = useState()
     const [ observacao, alteraObservacao ] = useState()
 
-    const [ editando, alteraEditando ] = useState(false)
+    const [ editando, alteraEditando ] = useState(null)
 
     const [listaVendas, alteraListaVendas] = useState([])
     const [listaUsuarios, alteraListaUsuarios] = useState([])
@@ -46,6 +46,7 @@ function Vendas() {
                 id_usuario (*),
                 id_livro (*)
             `)
+            .order('id', { ascending: false })
 
         console.log(data)
 
@@ -65,7 +66,7 @@ function Vendas() {
 
     function editar(objeto){
 
-        alteraEditando(true)
+        alteraEditando(objeto.id)
 
         alteraQuantidade(objeto.quantidade)
         alteraPagamento(objeto.pagamento)
@@ -74,11 +75,34 @@ function Vendas() {
     }
 
     function cancelaEdicao(){
-        alteraEditando(false)
+        alteraEditando(null)
 
         alteraQuantidade("")
         alteraPagamento("")
         alteraObservacao("")
+    }
+
+    async function atualizar(){
+
+        const obj = {
+            quantidade: quantidade,
+            pagamento: pagamento,
+            observacao: observacao
+        }
+
+        const { error } = await supabase
+            .from('vendas')
+            .update(obj)
+            .eq('id', editando)
+
+        if(error == null){
+            alert("Atualização realizada com sucesso!")
+            cancelaEdicao()
+            buscaTodos()
+        }else{
+            alert("Dados inválidos! Verifique os campos e tente novamente...")
+        }
+
     }
 
     function formataData(data){
@@ -203,7 +227,7 @@ function Vendas() {
 
             <form onSubmit={salvar} >
                 <p>Selecione o usuário</p>
-                <select disabled={editando} onChange={ e => alteraUsuario(e.target.value) } >
+                <select disabled={editando != null} onChange={ e => alteraUsuario(e.target.value) } >
                     <option>Selecione...</option>
                 {
                     listaUsuarios.map(
@@ -214,7 +238,7 @@ function Vendas() {
 
                 <br/>
                 <p>Digite o livro</p>
-                <select disabled={editando}  onChange={ e => alteraLivro(e.target.value) } >
+                <select disabled={editando != null }  onChange={ e => alteraLivro(e.target.value) } >
                     <option>Selecione...</option>
                     {
                         listaLivros.map(
@@ -236,9 +260,9 @@ function Vendas() {
                 <br/>
                 
                 {
-                    editando == true ?
+                    editando != null ?
                         <div>
-                            <button>Atualizar</button>
+                            <button onClick={atualizar} >Atualizar</button>
                             <button onClick={ ()=> cancelaEdicao() } >Cancelar</button>
                         </div>
                     :
